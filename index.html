@@ -14,32 +14,40 @@
             scroll-behavior: smooth;
         }
 
-        /* Dark Mode (Default) */
+        /* THEME VARIABLES - KEEPING YOUR EXACT DESIGN */
+        :root {
+            --bg-body: #0f172a;
+            --text-main: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --nav-bg: rgba(15, 23, 42, 0.8);
+        }
+
+        /* LIGHT MODE OVERRIDES */
+        [data-theme="light"] {
+            --bg-body: #f8fafc;
+            --text-main: #1e293b;
+            --text-secondary: #475569;
+            --card-bg: rgba(0, 0, 0, 0.05);
+            --card-border: rgba(0, 0, 0, 0.1);
+            --nav-bg: rgba(248, 250, 252, 0.8);
+        }
+
         body {
-            background-color: #0f172a;
-            color: #e2e8f0;
+            background-color: var(--bg-body);
+            color: var(--text-main);
             overflow-x: hidden;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* Light Mode Overrides */
-        body.light-mode {
-            background-color: #f8fafc;
-            color: #1e293b;
+        .text-slate-400,
+        .text-slate-500 {
+            color: var(--text-secondary) !important;
         }
 
-        .light-mode .glass-card {
-            background: rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .light-mode .text-slate-400,
-        .light-mode .text-slate-500 {
-            color: #64748b;
-        }
-
-        .light-mode .text-white {
-            color: #0f172a;
+        .text-white {
+            color: var(--text-main) !important;
         }
 
         .gradient-text {
@@ -49,14 +57,14 @@
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--card-bg);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--card-border);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .glass-card:hover {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(59, 130, 246, 0.05);
             border-color: #3b82f6;
             transform: translateY(-8px);
         }
@@ -71,6 +79,7 @@
             transition: all 0.3s ease;
             display: inline-block;
             margin: 4px;
+            color: var(--text-main);
         }
 
         .skill-badge:hover {
@@ -86,35 +95,83 @@
             display: none;
             z-index: 100;
         }
+
+        .theme-switcher {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            color: #3b82f6;
+        }
+
+        /* MOBILE MENU STYLES */
+        #mobileMenu {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: var(--nav-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+            padding: 2rem;
+            gap: 1.5rem;
+            text-align: center;
+        }
+
+        #mobileMenu.active {
+            display: flex;
+        }
     </style>
 </head>
 
 <body class="font-sans">
 
-    <nav
-        class="fixed w-full z-50 glass-card px-4 md:px-8 py-4 flex justify-between items-center border-b border-white/5">
-        <div class="flex items-center gap-3 md:gap-4">
-            <div
-                class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-800 border border-blue-400 overflow-hidden flex-shrink-0">
+    <nav class="fixed w-full top-0 z-50 glass-card px-4 md:px-8 py-4 flex justify-between items-center border-b border-white/5"
+        style="background: var(--nav-bg)">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-slate-800 border border-blue-400 overflow-hidden">
                 <img src="small.png" alt="Profile" class="w-full h-full object-cover">
             </div>
-            <span class="font-bold text-lg md:text-xl tracking-tighter uppercase whitespace-nowrap">
-                DATA<span class="text-blue-500">INSIGHTS</span>
-            </span>
+            <span class="font-bold text-xl tracking-tighter uppercase">DATA<span
+                    class="text-blue-500">INSIGHTS</span></span>
         </div>
 
-        <div class="flex items-center gap-6">
+        <div class="flex items-center gap-4 md:gap-6">
             <div class="hidden md:flex gap-10 text-xs font-bold uppercase tracking-widest text-slate-400">
                 <a href="#about" class="hover:text-blue-400 transition">About</a>
                 <a href="#skills" class="hover:text-blue-400 transition">Skills</a>
                 <a href="#projects" class="hover:text-blue-400 transition">Projects</a>
                 <a href="#contact" class="hover:text-blue-400 transition">Contact</a>
+                <a href="https://www.linkedin.com/in/nityanand-poojary" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-blue-400 transition">Linkedin</a>
             </div>
 
-            <button onclick="toggleTheme()"
-                class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-blue-400 hover:text-blue-300 transition-all">
-                <i id="themeIcon" class="fas fa-moon"></i>
+            <div id="themeToggle" class="theme-switcher glass-card" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i>
+            </div>
+
+            <button id="hamburger" class="md:hidden text-blue-500 text-2xl p-2 focus:outline-none"
+                onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
             </button>
+        </div>
+
+        <div id="mobileMenu" class="md:hidden">
+            <a href="#about" onclick="toggleMobileMenu()" class="font-bold uppercase tracking-widest text-xs">About</a>
+            <a href="#skills" onclick="toggleMobileMenu()"
+                class="font-bold uppercase tracking-widest text-xs">Skills</a>
+            <a href="#projects" onclick="toggleMobileMenu()"
+                class="font-bold uppercase tracking-widest text-xs">Projects</a>
+            <a href="#contact" onclick="toggleMobileMenu()"
+                class="font-bold uppercase tracking-widest text-xs">Contact</a>
+            <a href="https://www.linkedin.com/in/nityanand-poojary" target="_blank"
+                class="font-bold uppercase tracking-widest text-xs">Linkedin</a>
         </div>
     </nav>
 
@@ -134,13 +191,15 @@
             <p>
                 I am <span class="text-white font-medium">Nityananda Poojary</span>, an aspiring <span
                     class="text-white font-medium">Data Analyst</span> with a strong passion for transforming raw data
-                into meaningful insights that support smarter business decisions.
+                into meaningful insights that support smarter business decisions. I enjoy working with data, identifying
+                patterns, and presenting findings through clear and impactful visualizations.
             </p>
             <p>
                 This portfolio showcases a collection of my data analysis projects, dashboards, and case studies
                 developed using tools such as <span class="text-green-400 font-semibold">Excel</span>. I am currently
-                expanding my skill set by learning <span class="text-blue-400 font-semibold">Power BI, SQL, and
-                    Python</span>.
+                expanding my skill set by learning industry-relevant tools and technologies including <span
+                    class="text-blue-400 font-semibold">Power BI, SQL, and Python</span> to strengthen my analytical
+                capabilities.
             </p>
             <p class="text-white italic font-medium">
                 Thank you for visiting my portfolio. I truly appreciate your time and interest in my work.
@@ -214,8 +273,15 @@
                     <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
                         class="w-full h-full object-cover transition duration-500 group-hover:scale-110"
                         alt="Ecommerce Project">
+                    <div class="absolute inset-0 bg-blue-600/20 mix-blend-multiply"></div>
                 </div>
                 <div class="p-8">
+                    <div class="flex gap-2 mb-4">
+                        <span
+                            class="text-[10px] font-black uppercase tracking-widest text-blue-400 bg-blue-400/10 px-3 py-1 rounded">SQL</span>
+                        <span
+                            class="text-[10px] font-black uppercase tracking-widest text-green-400 bg-green-400/10 px-3 py-1 rounded">Tableau</span>
+                    </div>
                     <h3 class="text-2xl font-bold mb-3 italic text-white">E-Commerce Sales Insights</h3>
                     <p class="text-slate-400 text-sm mb-6 leading-relaxed">
                         Cleaned and analyzed customer purchase data to identify high-value segments.
@@ -231,8 +297,15 @@
                     <img src="https://images.unsplash.com/photo-1543286386-713bdd548da4?auto=format&fit=crop&w=800&q=80"
                         class="w-full h-full object-cover transition duration-500 group-hover:scale-110"
                         alt="Health Project">
+                    <div class="absolute inset-0 bg-cyan-600/20 mix-blend-multiply"></div>
                 </div>
                 <div class="p-8">
+                    <div class="flex gap-2 mb-4">
+                        <span
+                            class="text-[10px] font-black uppercase tracking-widest text-yellow-400 bg-yellow-400/10 px-3 py-1 rounded">Python</span>
+                        <span
+                            class="text-[10px] font-black uppercase tracking-widest text-purple-400 bg-purple-400/10 px-3 py-1 rounded">EDA</span>
+                    </div>
                     <h3 class="text-2xl font-bold mb-3 italic text-white">Health Data Trend Analysis</h3>
                     <p class="text-slate-400 text-sm mb-6 leading-relaxed">
                         Utilized Python to perform exploratory data analysis on public health records.
@@ -269,10 +342,17 @@
             </div>
 
             <form onsubmit="handleContact(event)" class="space-y-4">
-                <input type="text" id="userName" placeholder="IDENTIFICATION NAME" required
-                    class="w-full bg-slate-900/50 border border-white/10 rounded-xl py-4 px-5 text-xs font-bold tracking-widest text-white focus:outline-none focus:border-blue-500 transition-all">
-                <textarea id="userMsg" rows="4" placeholder="TRANSMISSION DATA" required
-                    class="w-full bg-slate-900/50 border border-white/10 rounded-xl py-4 px-5 text-xs font-bold tracking-widest text-white focus:outline-none focus:border-blue-500 transition-all"></textarea>
+                <div class="relative">
+                    <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-[10px]"></i>
+                    <input type="text" id="userName" placeholder="IDENTIFICATION NAME" required
+                        class="w-full bg-slate-900/50 border border-white/10 rounded-xl py-4 pl-10 pr-4 text-xs font-bold tracking-widest text-white focus:outline-none focus:border-blue-500 transition-all">
+                </div>
+
+                <div class="relative">
+                    <textarea id="userMsg" rows="4" placeholder="TRANSMISSION DATA (MESSAGE)" required
+                        class="w-full bg-slate-900/50 border border-white/10 rounded-xl py-4 px-5 text-xs font-bold tracking-widest text-white focus:outline-none focus:border-blue-500 transition-all"></textarea>
+                </div>
+
                 <button type="submit" id="submitBtn"
                     class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-xl shadow-lg transition-all active:scale-95 uppercase text-xs tracking-[0.4em]">
                     Initialize Transfer
@@ -286,7 +366,7 @@
     </footer>
 
     <button id="scrollTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
-        class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-lg">
+        class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-blue-500 transition">
         <i class="fas fa-arrow-up"></i>
     </button>
 
@@ -294,19 +374,36 @@
     <script>
         AOS.init({ duration: 1000, once: true });
 
-        // THEME TOGGLE LOGIC
+        // THEME LOGIC
         function toggleTheme() {
-            const body = document.body;
-            const icon = document.getElementById('themeIcon');
-            body.classList.toggle('light-mode');
+            const body = document.documentElement;
+            const icon = document.querySelector('#themeToggle i');
 
-            if (body.classList.contains('light-mode')) {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'dark');
             } else {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
+                body.setAttribute('data-theme', 'light');
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'light');
             }
+        }
+
+        // Apply saved theme on load
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.querySelector('#themeToggle i').className = 'fas fa-sun';
+        }
+
+        // MOBILE MENU TOGGLE
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('#hamburger i');
+            menu.classList.toggle('active');
+            hamburger.classList.toggle('fa-bars');
+            hamburger.classList.toggle('fa-times');
         }
 
         window.addEventListener('scroll', () => {
@@ -316,7 +413,7 @@
 
         let currentProtocol = 'email';
         const MY_EMAIL = "nityanandapoojary06@gmail.com";
-        const MY_PHONE = "919606735740";
+        const MY_PHONE = "918660217880";
 
         function setProtocol(type) {
             currentProtocol = type;
